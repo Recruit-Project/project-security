@@ -12,6 +12,10 @@ dependencyManagement {
 		mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.3"
 	}
 }
+
+group = 'com.kyj.fmk'
+version = '0.0.1-SNAPSHOT'
+
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -30,8 +34,7 @@ publishing {
 		}
 	}
 }
-group = 'com.kyj.fmk'
-version = '0.0.1-SNAPSHOT'
+
 
 java {
 	toolchain {
@@ -56,9 +59,9 @@ repositories {
 		}
 	}
 }
-configurations.all {
-	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
-}
+//configurations.all {
+//	resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+//}
 dependencies {
 	dependencies {
 		implementation 'com.kyj.fmk:core:0.0.1-SNAPSHOT'
