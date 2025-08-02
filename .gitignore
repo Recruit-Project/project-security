@@ -30,6 +30,6 @@ build/tmp/*
 .vscode/
 .DS_Store
 .idea
-.out
-.build
+out/
+build/
 .libs
