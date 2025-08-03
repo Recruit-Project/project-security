@@ -57,7 +57,7 @@ configurations.all {
 	}
 }
 dependencies {
-		api 'com.kyj.fmk:core:0.0.1-SNAPSHOT'
+		api 'com.kyj.fmk:project-core-dev:0.0.1-SNAPSHOT'
 		annotationProcessor 'org.projectlombok:lombok'
 
 }
