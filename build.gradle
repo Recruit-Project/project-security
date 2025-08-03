@@ -50,7 +50,12 @@ publishing {
 	}
 }
 
-
+configurations.all {
+	resolutionStrategy {
+		// SNAPSHOT 은 항상 최신 버전 사용
+		cacheChangingModulesFor 0, 'seconds'
+	}
+}
 dependencies {
 		api 'com.kyj.fmk:core:0.0.1-SNAPSHOT'
 		annotationProcessor 'org.projectlombok:lombok'
