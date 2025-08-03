@@ -16,6 +16,8 @@ public final class UrlConst {
             "/",
             "/login" ,   // 개발시 변경
             "/error",
+            "/actuator/health/readiness",
+            "/actuator/health/liveness",
             API_BASE_URL+"login",
             API_BASE_URL+"reissue"
     );
