@@ -6,6 +6,7 @@ import com.kyj.fmk.core.exception.custom.KyjSysException;
 import com.kyj.fmk.core.model.dto.ResApiDTO;
 import com.kyj.fmk.core.model.enm.ApiErrCode;
 import com.kyj.fmk.core.util.CookieUtil;
+import com.kyj.fmk.sec.dto.member.MemberDTO;
 import com.kyj.fmk.sec.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -104,9 +106,9 @@ public class TokenRedisService implements TokenService{
 
           ResponseCookie responseCookie= CookieUtil.deleteCookie("refresh","/");//refresh 쿠키제거메서드
             response.setHeader(HttpHeaders.SET_COOKIE,responseCookie.toString());
-             String usrname = jwtUtil.getUsername(refresh);
+             String usrId = jwtUtil.getUsrId(refresh);
 
-                redisTemplate.delete(REFRESH_TOKEN_KEY+ usrname);
+                redisTemplate.delete(REFRESH_TOKEN_KEY+ usrId);
                 throw new KyjSysException(ApiErrCode.CM001,"만료된 세션입니다.");
 
 
@@ -122,7 +124,7 @@ public class TokenRedisService implements TokenService{
 
 
 
-        String chkUsrId=jwtUtil.getUsername(refresh);
+        String chkUsrId=jwtUtil.getUsrId(refresh);
 
 
         Boolean isExist = isExist(chkUsrId,refresh);
@@ -146,18 +148,28 @@ public class TokenRedisService implements TokenService{
 
 
 
-        String username = jwtUtil.getUsername(refresh);
+        String usrId = jwtUtil.getUsrId(refresh);
         String roles = jwtUtil.getRoles(refresh);
+        String usrSeqId = jwtUtil.getUsrSeqId(refresh);
+        String email = jwtUtil.getEmail(refresh);
+        String nickname = jwtUtil.getNickname(refresh);
+        String dtyCd = jwtUtil.getDtyCd(refresh);
+        String career = jwtUtil.getCareer(refresh);
+        String skillCds = jwtUtil.getSkillCds(refresh);
+
+
 
         //새로운 jwt 토큰 발급
-        String nwAccess = jwtUtil.createJwt("access", username,roles,300000L);//엑세스 토큰
-        String nwRefresh = jwtUtil.createJwt("refresh",  username,roles,86400000L); //리프레시 토큰
+        String nwAccess = jwtUtil.createJwt("access", usrId, usrSeqId,nickname,skillCds,
+                                              email,roles,dtyCd,career,300000L);//엑세스 토큰
+        String nwRefresh = jwtUtil.createJwt("refresh", usrId, usrSeqId,nickname,skillCds,
+                                              email,roles,dtyCd,career,86400000L); //리프레시 토큰
 
 
-        deleteRefresh(username, refresh); //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
+        deleteRefresh(usrId, refresh); //Refresh 토큰 저장 DB에 기존의 Refresh 토큰 삭제 후 새 Refresh 토큰 저장
 
 
-        addRefresh(username,nwRefresh); //새토큰 저장
+        addRefresh(usrId,nwRefresh); //새토큰 저장
 
 
         //응답 설정

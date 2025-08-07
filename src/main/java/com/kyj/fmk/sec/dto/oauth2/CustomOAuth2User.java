@@ -1,0 +1,69 @@
+package com.kyj.fmk.sec.dto.oauth2;
+
+import com.kyj.fmk.sec.dto.member.MemberDTO;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+
+public class CustomOAuth2User implements OAuth2User {
+
+    private final MemberDTO memberDTO;
+
+    public CustomOAuth2User(MemberDTO memberDTO) {
+     this.memberDTO = memberDTO;
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return null;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        Collection<GrantedAuthority> collection = new ArrayList<>();
+
+        collection.add(new GrantedAuthority() {
+
+
+            @Override
+            public String getAuthority() {
+                return memberDTO.getRole();
+            }
+        });
+
+        return collection;
+    }
+
+    @Override
+    public String getName() {
+        return null;
+    }
+
+    public  String getUsrId(){
+        return memberDTO.getUsrId();
+    }
+    public Long getUsrSeqId(){
+        return memberDTO.getUsrSeqId();
+    }
+    public  String getEmail(){
+        return memberDTO.getEmail();
+    }
+    public  String getNickname(){
+        return memberDTO.getNickname();
+    }
+    public  String getDtyCd(){
+        return memberDTO.getDtyCd();
+    }
+    public int getCareer(){
+        return memberDTO.getCareer();
+    }
+    public List<String> getSkillCds(){
+        return memberDTO.getSkillCds();
+    }
+
+}
