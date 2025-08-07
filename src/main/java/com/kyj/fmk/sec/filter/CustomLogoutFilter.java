@@ -138,8 +138,8 @@ public class CustomLogoutFilter extends GenericFilterBean {
         //로그아웃 진행
         //Refresh 토큰 DB에서 제거
         if(refresh != null){
-            String username = jwtUtil.getUsername(refresh); // 레디스 키값
-            tokenService.deleteRefresh(username, refresh);
+            String usrId = jwtUtil.getUsrId(refresh); // 레디스 키값
+            tokenService.deleteRefresh(usrId, refresh);
             //refresh 쿠키제거메서드
             ResponseCookie responseCookie1 = CookieUtil.deleteCookie("refresh", "/");
             response.addHeader(HttpHeaders.SET_COOKIE,responseCookie1.toString());

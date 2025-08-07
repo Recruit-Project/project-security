@@ -1,7 +1,7 @@
 package com.kyj.fmk.sec.handler;
 
 import com.kyj.fmk.core.util.CookieUtil;
-import com.kyj.fmk.sec.dto.CustomOAuth2User;
+import com.kyj.fmk.sec.dto.oauth2.CustomOAuth2User;
 import com.kyj.fmk.sec.dto.res.SecurityResponse;
 import com.kyj.fmk.sec.exception.SecErrCode;
 import com.kyj.fmk.sec.jwt.JWTUtil;
@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,23 +39,43 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+
+    isExistMemberToLogin(request,response,authentication);
+
+
+    }
+
+
+    private void isExistMemberToLogin( HttpServletRequest request,
+                                       HttpServletResponse response,
+                                       Authentication authentication){
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
         deleteOriginalInfo(request,response);
 
-        String username = customUserDetails.getUsername();
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+        String usrId = customUserDetails.getUsrId();
+        String usrSeqId = String.valueOf(customUserDetails.getUsrSeqId());
+        String email = customUserDetails.getEmail();
+        String nickname = customUserDetails.getNickname();
+        String dtyCd = customUserDetails.getDtyCd();
+        String career = String.valueOf(customUserDetails.getCareer());
 
+        List<String> skillCds = customUserDetails.getSkillCds();
+        String skillCdsStr = (skillCds != null) ? String.join(",", skillCds) : "";
+
+        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         String roles = authorities.stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
 
         //새로운 jwt 토큰 발급
-        String access = jwtUtil.createJwt("access", username,roles,300000L);//엑세스 토큰
-        String refresh = jwtUtil.createJwt("refresh",  username,roles,86400000L); //리프레시 토큰
+        String access = jwtUtil.createJwt("access", usrId, usrSeqId,nickname,skillCdsStr,
+                email,roles,dtyCd,career,300000L);//엑세스 토큰
+        String refresh = jwtUtil.createJwt("refresh", usrId, usrSeqId,nickname,skillCdsStr,
+                email,roles,dtyCd,career,86400000L); //리프레시 토큰
 
-        tokenRedisService.addRefresh(username,refresh);
+        tokenRedisService.addRefresh(usrId,refresh);
 
         ResponseCookie responseAccessCookie= CookieUtil.createCookie("Authorization",access, 5 * 60,"/");
         ResponseCookie responseRefreshCookie= CookieUtil.createCookie("refresh",refresh,604800,"/");
@@ -62,10 +83,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //성공시 응답
         response.addHeader(HttpHeaders.SET_COOKIE, responseAccessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, responseRefreshCookie.toString());
-        response.sendRedirect("http://localhost:8080/my");
-//        response.sendRedirect("http://localhost:8080/my"); 쿠키로 이동할 페이지를 받아 파라미터로 받아 넘겨준다.
+        //response.sendRedirect("http://localhost:8080/my");
     }
-
 
     private void deleteOriginalInfo(HttpServletRequest request,
                                     HttpServletResponse response){
@@ -106,11 +125,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             if(target.size()>0){
 
                 for (String token : target){
-                    String username = jwtUtil.getUsername(token);
+                    String usrId = jwtUtil.getUsrId(token);
                     String category = jwtUtil.getCategory(token);
 
                     if(category.equals("refresh")){
-                        tokenRedisService.deleteRefresh(username,refresh);
+                        tokenRedisService.deleteRefresh(usrId,refresh);
                         ResponseCookie responseCookie= CookieUtil.deleteCookie("refresh","/");//refresh 쿠키제거메
                         response.addHeader(HttpHeaders.SET_COOKIE, responseCookie.toString());
 

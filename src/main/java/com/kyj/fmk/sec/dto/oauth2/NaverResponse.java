@@ -1,4 +1,4 @@
-package com.kyj.fmk.sec.dto;
+package com.kyj.fmk.sec.dto.oauth2;
 
 import java.util.Map;
 
