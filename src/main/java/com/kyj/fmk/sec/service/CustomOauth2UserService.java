@@ -40,17 +40,18 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         String usrId = oAuth2Response.getProvider()+"_"+oAuth2Response.getProviderId();
         Boolean isExist = authRepository.isExist(usrId);
 
-        if (isExist) {
+        if (isExist == null || !isExist) {
+            //usrid값 멤버dto담기
+            //추가정보입력 플래그 true
+            return new CustomOAuth2User(new MemberDTO(),true);
+        }
+        else {
+
             //회원정보 셀렉트
             //usr_id 업데이트
             //추가정보입력 플래그 False
 
             return new CustomOAuth2User(new MemberDTO(),false);
-        }
-        else {
-            //usrid값 멤버dto담기
-            //추가정보입력 플래그 true
-            return new CustomOAuth2User(new MemberDTO(),true);
         }
 
     }
