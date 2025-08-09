@@ -18,7 +18,11 @@ import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 
 import java.util.Date;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 사용되는 JWTUtil
+ *  */
 @Component
 public final class JWTUtil {
 

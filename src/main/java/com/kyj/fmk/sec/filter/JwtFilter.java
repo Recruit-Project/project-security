@@ -20,7 +20,11 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.Arrays;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 사용되는 jwt 필터이다.
+ *  */
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 

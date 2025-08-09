@@ -27,7 +27,11 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import java.util.Collections;
 import java.util.List;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에 filter chain및 설정을 하는 클래스
+ *  */
 @EnableWebSecurity
 @Configuration
 public class SecurityConfig {

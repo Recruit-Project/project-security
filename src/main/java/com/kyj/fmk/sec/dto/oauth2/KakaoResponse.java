@@ -1,7 +1,11 @@
 package com.kyj.fmk.sec.dto.oauth2;
 
 import java.util.Map;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 OAuth2Response를 구현한 카카오 리스폰스 객체
+ *  */
 public class KakaoResponse implements OAuth2Response {
     private final Map<String, Object> attribute;
 

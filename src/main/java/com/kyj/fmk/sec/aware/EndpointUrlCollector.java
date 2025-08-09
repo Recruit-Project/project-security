@@ -11,7 +11,11 @@ import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.*;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 endpoint에 대한 인가설정을 urlconst와 requestmapping의 어노테이션 리플렉션 정보를 읽어와 설정한다.
+ *  */
 @Component
 public class EndpointUrlCollector implements ApplicationContextAware {
 
