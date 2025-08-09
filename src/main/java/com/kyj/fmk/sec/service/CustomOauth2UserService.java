@@ -36,14 +36,17 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
         }  else{
             return null;
         }
+        MemberDTO mem =  new MemberDTO();
 
         String usrId = oAuth2Response.getProvider()+"_"+oAuth2Response.getProviderId();
         Boolean isExist = authRepository.isExist(usrId);
+        mem.setUsrId(usrId);
 
         if (isExist == null || !isExist) {
             //usrid값 멤버dto담기
             //추가정보입력 플래그 true
-            return new CustomOAuth2User(new MemberDTO(),true);
+
+            return new CustomOAuth2User(mem,true);
         }
         else {
 
@@ -51,7 +54,7 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             //usr_id 업데이트
             //추가정보입력 플래그 False
 
-            return new CustomOAuth2User(new MemberDTO(),false);
+            return new CustomOAuth2User(mem,false);
         }
 
     }
