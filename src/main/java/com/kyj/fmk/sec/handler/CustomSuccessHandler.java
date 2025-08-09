@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,18 +36,17 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtil jwtUtil;
     private final TokenRedisService tokenRedisService;
 
-    private
-
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
 
-    isExistMemberToLogin(request,response,authentication);
-
-
+        isExistMemberToLogin(request, response, authentication);
     }
+
+
+
 
 
     private void isExistMemberToLogin( HttpServletRequest request,
