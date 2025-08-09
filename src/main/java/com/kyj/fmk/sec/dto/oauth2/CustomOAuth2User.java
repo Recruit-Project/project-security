@@ -4,10 +4,8 @@ import com.kyj.fmk.sec.dto.member.MemberDTO;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 /**
  *  * 2025-08-09
  *  * @author 김용준
@@ -25,7 +23,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override
@@ -47,7 +45,7 @@ public class CustomOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return null;
+        return memberDTO.getUsrId();
     }
 
     public  String getUsrId(){
