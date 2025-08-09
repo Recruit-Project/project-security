@@ -8,7 +8,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 OAuth2User를 구현한 커스텀 OAuth2User객체
+ *  */
 public class CustomOAuth2User implements OAuth2User {
 
     private final MemberDTO memberDTO;

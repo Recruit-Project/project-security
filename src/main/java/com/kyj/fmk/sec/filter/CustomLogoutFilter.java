@@ -22,7 +22,11 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 로그아웃을 위한 필터이다.
+ *  */
 @RequiredArgsConstructor
 public class CustomLogoutFilter extends GenericFilterBean {
 

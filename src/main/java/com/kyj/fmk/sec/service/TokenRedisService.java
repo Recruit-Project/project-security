@@ -21,7 +21,11 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
-
+/**
+ *  * 2025-08-09
+ *  * @author 김용준
+ *  * 스프링 시큐리티에서 토큰과 redis의 연관관계 및  생명주기를 관리하는 서비스
+ *  */
 @Service
 @RequiredArgsConstructor
 public class TokenRedisService implements TokenService{
