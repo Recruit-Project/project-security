@@ -1,5 +1,6 @@
 package com.kyj.fmk.sec.handler;
 
+import com.kyj.fmk.core.model.RedisKey;
 import com.kyj.fmk.core.util.CookieUtil;
 import com.kyj.fmk.sec.dto.oauth2.CustomOAuth2User;
 import com.kyj.fmk.sec.dto.res.SecurityResponse;
@@ -43,6 +44,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${spring.security.oauth2.login.addition-info-url}")
     private String additionInfoUrl;
 
+    /**
+     * ouath2인증 성공시 추가정보입력 혹은 성공페이지 리다이렉트 분기하는 핸들러
+     * @param request
+     * @param response
+     * @param authentication
+     * @throws IOException
+     * @throws ServletException
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
@@ -55,19 +64,42 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             isAddtionInfoToJoin(request, response, authentication);
         }else{
             isExistMemberToLogin(request, response, authentication);
-
         }
     }
 
 
-
+    /**
+     * 추가정보 입력페이지
+     * @param request
+     * @param response
+     * @param authentication
+     * @throws IOException
+     */
     private void isAddtionInfoToJoin(HttpServletRequest request,
                                      HttpServletResponse response,
                                      Authentication authentication) throws IOException {
+
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
+
+        String joinJwt = jwtUtil.createJoinJwt("joinJwt",customUserDetails.getUsrId(),10 * 60 * 1000L);
+        //회원가입 토큰 레디스저장
+
+        tokenRedisService.addRefresh(RedisKey.MEMBER_ADDITIONL_INFO,joinJwt);
+        //회원가입 추가정보입력을 위한 토큰 쿠키전송
+        ResponseCookie joinJwtCookie= CookieUtil.createCookie("joinJwt",joinJwt,600,"/");
+
+        response.addHeader(HttpHeaders.SET_COOKIE, joinJwtCookie.toString());
         response.sendRedirect(additionInfoUrl);
 
     }
 
+    /**
+     * 이미 존재하는 회원 , 성공리다이렉트
+     * @param request
+     * @param response
+     * @param authentication
+     * @throws IOException
+     */
     private void isExistMemberToLogin( HttpServletRequest request,
                                        HttpServletResponse response,
                                        Authentication authentication) throws IOException {
