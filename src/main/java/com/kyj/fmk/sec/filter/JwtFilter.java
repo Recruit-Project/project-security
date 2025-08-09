@@ -125,7 +125,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
         //UserDetails에 회원 정보 객체 담기
-        CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDTO);
+        CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDTO,false);
 
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
