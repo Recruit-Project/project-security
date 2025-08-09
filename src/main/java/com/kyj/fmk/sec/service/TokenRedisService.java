@@ -1,12 +1,13 @@
 package com.kyj.fmk.sec.service;
 
 
-import com.kyj.fmk.core.exception.custom.KyjBizException;
+import com.kyj.fmk.core.exception.custom.KyjAuthException;
+
 import com.kyj.fmk.core.exception.custom.KyjSysException;
 import com.kyj.fmk.core.model.dto.ResApiDTO;
-import com.kyj.fmk.core.model.enm.ApiErrCode;
+import com.kyj.fmk.core.model.enm.CmErrCode;
 import com.kyj.fmk.core.util.CookieUtil;
-import com.kyj.fmk.sec.dto.member.MemberDTO;
+
 import com.kyj.fmk.sec.jwt.JWTUtil;
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.http.Cookie;
@@ -95,12 +96,12 @@ public class TokenRedisService implements TokenService{
         } catch (Exception e) {
             // TODO: handle exception
 
-            throw new KyjSysException(ApiErrCode.CM003);
+            throw new KyjSysException(CmErrCode.CM003);
 
         }
 
         if (refresh == null) {//만약 refresh가 없다면
-            throw new KyjBizException(ApiErrCode.CM001,"인증정보가 존재하지 않습니다.");
+            throw new KyjAuthException(CmErrCode.SEC002);
 
         }
 
@@ -110,10 +111,10 @@ public class TokenRedisService implements TokenService{
 
           ResponseCookie responseCookie= CookieUtil.deleteCookie("refresh","/");//refresh 쿠키제거메서드
             response.setHeader(HttpHeaders.SET_COOKIE,responseCookie.toString());
-             String usrId = jwtUtil.getUsrId(refresh);
+            String usrId = jwtUtil.getUsrId(refresh);
 
                 redisTemplate.delete(REFRESH_TOKEN_KEY+ usrId);
-                throw new KyjSysException(ApiErrCode.CM001,"만료된 세션입니다.");
+                throw new KyjAuthException(CmErrCode.SEC007);
 
 
         }
@@ -122,7 +123,7 @@ public class TokenRedisService implements TokenService{
         String category = jwtUtil.getCategory(refresh);   // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
 
         if (!category.equals("refresh")) {//refresh 토큰이 아니면
-                throw new KyjSysException(ApiErrCode.CM001,"토큰의 유형이 다릅니다.");
+                throw new KyjAuthException(CmErrCode.SEC002);
         }
 
 
@@ -138,7 +139,7 @@ public class TokenRedisService implements TokenService{
            ResponseCookie responseCookie= CookieUtil.deleteCookie("refresh","/");//refresh 쿠키제거메서드
             response.setHeader(HttpHeaders.SET_COOKIE,responseCookie.toString());
 
-                throw new KyjSysException(ApiErrCode.CM001,"만료된 세션입니다.");
+            throw new KyjAuthException(CmErrCode.SEC007);
         }
 
         Boolean isExistBlackList = isExistBlackList(refresh);
@@ -147,7 +148,7 @@ public class TokenRedisService implements TokenService{
             ResponseCookie responseCookie= CookieUtil.deleteCookie("refresh","/");//refresh 쿠키제거메서드
             response.setHeader(HttpHeaders.SET_COOKIE,responseCookie.toString());
 
-            throw new KyjBizException(ApiErrCode.CM001,"허용되지 않은 접근입니다.");
+            throw new KyjAuthException(CmErrCode.SEC011);
         }
 
 
