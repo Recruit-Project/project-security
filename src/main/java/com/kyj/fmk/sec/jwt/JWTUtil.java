@@ -131,4 +131,17 @@ public final class JWTUtil {
                 .compact();
     }
 
+
+    //토큰을 만듬
+    public String createJoinJwt(String category, String usrId, Long expiredMs) {
+
+        return Jwts.builder()
+                .claim("category", category)
+                .claim("usrId", usrId) //이름
+                .issuedAt(new Date(System.currentTimeMillis()))//만든날
+                .expiration(new Date(System.currentTimeMillis() + expiredMs))//유효기간
+                .signWith(secretKey)//시크릿키
+                .compact();
+    }
+
 }
