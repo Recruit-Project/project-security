@@ -1,5 +1,6 @@
 package com.kyj.fmk.sec.repository;
 
+import com.kyj.fmk.sec.dto.member.MemberDTO;
 import com.kyj.fmk.sec.mapper.AuthMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -21,5 +22,43 @@ public class AuthRepository {
      */
     public Boolean isExist(String usrId){
         return authMapper.isExist(usrId);
+    }
+
+    /**
+     * 유저아이디를 이용해 회원의 정보를 가져오는 repo
+     * @param usrId
+     * @return
+     */
+    public MemberDTO findByUsrId(String usrId){
+        return authMapper.findByUsrId(usrId);
+    }
+
+    /**
+     * 회원가입(member 테이블)
+     * @param memberDTO
+     */
+    public void insertMember(MemberDTO memberDTO){
+        authMapper.insertMember(memberDTO);
+    }
+    /**
+     * 회원가입(member 테이블)
+     * @param memberDTO
+     */
+    public void insertMemberSkill(MemberDTO memberDTO){
+        authMapper.insertMemberSkill(memberDTO);
+    }
+    /**
+     * 회원정보수정(member)
+     * @param memberDTO
+     */
+    public void updateMember(MemberDTO memberDTO){
+        authMapper.updateMember(memberDTO);
+    }
+    /**
+     * 회원정보수정(memberskill)
+     * @param memberDTO
+     */
+    public void updateMemberSkill(MemberDTO memberDTO){
+        authMapper.updateMemberSkill(memberDTO);
     }
 }

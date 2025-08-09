@@ -16,8 +16,10 @@ import java.util.Map;
 public class CustomOAuth2User implements OAuth2User {
 
     private final MemberDTO memberDTO;
+    private final boolean additionalInfo;
 
-    public CustomOAuth2User(MemberDTO memberDTO) {
+    public CustomOAuth2User(MemberDTO memberDTO,boolean additionalInfo) {
+     this.additionalInfo=additionalInfo;
      this.memberDTO = memberDTO;
     }
 
@@ -68,6 +70,9 @@ public class CustomOAuth2User implements OAuth2User {
     }
     public List<String> getSkillCds(){
         return memberDTO.getSkillCds();
+    }
+    public boolean isAdditionalInfo(){
+        return this.additionalInfo;
     }
 
 }

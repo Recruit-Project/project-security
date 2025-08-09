@@ -11,6 +11,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -36,22 +37,40 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtil jwtUtil;
     private final TokenRedisService tokenRedisService;
 
+    @Value("${spring.security.oauth2.login.success-url}")
+    private String successUrl;
+
+    @Value("${spring.security.oauth2.login.addition-info-url}")
+    private String additionInfoUrl;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request,
                                         HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
+        CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
-        isExistMemberToLogin(request, response, authentication);
+        boolean isAdditionalInfo = customUserDetails.isAdditionalInfo();
+
+        if(isAdditionalInfo){
+            isAddtionInfoToJoin(request, response, authentication);
+        }else{
+            isExistMemberToLogin(request, response, authentication);
+
+        }
     }
 
 
 
+    private void isAddtionInfoToJoin(HttpServletRequest request,
+                                     HttpServletResponse response,
+                                     Authentication authentication) throws IOException {
+        response.sendRedirect(additionInfoUrl);
 
+    }
 
     private void isExistMemberToLogin( HttpServletRequest request,
                                        HttpServletResponse response,
-                                       Authentication authentication){
+                                       Authentication authentication) throws IOException {
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
         deleteOriginalInfo(request,response);
@@ -86,7 +105,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //성공시 응답
         response.addHeader(HttpHeaders.SET_COOKIE, responseAccessCookie.toString());
         response.addHeader(HttpHeaders.SET_COOKIE, responseRefreshCookie.toString());
-        //response.sendRedirect("http://localhost:8080/my");
+        response.sendRedirect(successUrl);
     }
 
     private void deleteOriginalInfo(HttpServletRequest request,
