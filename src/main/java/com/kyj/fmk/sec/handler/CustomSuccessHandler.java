@@ -37,6 +37,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     private final JWTUtil jwtUtil;
     private final TokenRedisService tokenRedisService;
 
+    private
 
 
     @Override
