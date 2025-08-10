@@ -1,6 +1,7 @@
 package com.kyj.fmk.sec.handler;
 
-import com.kyj.fmk.core.model.RedisKey;
+
+import com.kyj.fmk.core.redis.RedisKey;
 import com.kyj.fmk.core.util.CookieUtil;
 import com.kyj.fmk.sec.dto.oauth2.CustomOAuth2User;
 import com.kyj.fmk.sec.dto.res.SecurityResponse;
